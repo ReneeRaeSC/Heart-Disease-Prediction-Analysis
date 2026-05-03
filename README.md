@@ -1,32 +1,57 @@
-# 🫀 Heart Disease Prediction Analysis
+# Heart Disease Prediction Analysis
 
 A machine learning project that applies binary classification to predict the presence of heart disease using the UCI Heart Disease dataset. The project prioritizes **Recall (Sensitivity)** to minimize false negatives — ensuring high-risk patients are flagged for clinical review.
 
 ---
 
-## 📌 Project Overview
+## Project Overview
 
 Cardiovascular disease is one of the leading causes of death globally. This project explores whether machine learning can serve as a scalable, accessible screening tool to identify high-risk individuals before acute events occur.
 
-**Goal:** Binary classification — predict whether a patient has heart disease (1) or not (0)  
-**Dataset:** UCI Heart Disease Repository — 920 patient records from 4 institutions  
-**Primary Metric:** Recall (Sensitivity) — minimizing dangerous false negatives  
+| | |
+|---|---|
+| **Goal** | Binary classification — predict whether a patient has heart disease (1) or not (0) |
+| **Dataset** | UCI Heart Disease Repository — 920 patient records from 4 institutions |
+| **Models** | Logistic Regression, Decision Tree, Random Forest |
+| **Primary Metric** | Recall (Sensitivity) — minimizing dangerous false negatives |
 
 ---
 
-## 🗂️ Dataset
+## Dataset
 
 | Property | Detail |
 |---|---|
 | **Name** | Heart Disease Dataset |
 | **Source** | [UCI Machine Learning Repository](https://archive.ics.uci.edu/dataset/45/heart+disease) |
-| **Records** | 920 patients |
+| **Records** | 920 patients (Cleveland, Hungary, Switzerland, Long Beach) |
 | **Features** | 14 clinical features |
 | **Class Balance** | 55.3% with heart disease / 44.7% without |
 
+<details>
+<summary> Feature Dictionary</summary>
+
+| Variable | Name | Description |
+|---|---|---|
+| `age` | Age | Age in years |
+| `sex` | Sex | 1 = male; 0 = female |
+| `cp` | Chest Pain Type | 1: typical angina, 2: atypical angina, 3: non-anginal pain, 4: asymptomatic |
+| `trestbps` | Resting Blood Pressure | In mm Hg on admission to hospital |
+| `chol` | Serum Cholesterol | In mg/dl |
+| `fbs` | Fasting Blood Sugar | > 120 mg/dl (1 = true; 0 = false) |
+| `restecg` | Resting ECG | 0: normal, 1: ST-T wave abnormality, 2: left ventricular hypertrophy |
+| `thalach` | Max Heart Rate | Maximum heart rate achieved |
+| `exang` | Exercise Angina | Exercise induced angina (1 = yes; 0 = no) |
+| `oldpeak` | ST Depression | ST depression induced by exercise relative to rest |
+| `slope` | ST Slope | Slope of the peak exercise ST segment |
+| `ca` | Major Vessels | Number of major vessels (0–3) colored by fluoroscopy |
+| `thal` | Thalassemia | 3 = normal; 6 = fixed defect; 7 = reversible defect |
+| `target` | Diagnosis | Disease status (binary: 0 = no disease, 1 = disease) |
+
+</details>
+
 ---
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 - **Language:** Python
 - **Data Processing:** Pandas, NumPy
@@ -35,55 +60,87 @@ Cardiovascular disease is one of the leading causes of death globally. This proj
 
 ---
 
-## 🔬 Methodology
+## Methodology
 
 ### 1. Data Acquisition & Integration
-The dataset was consolidated from four separate CSV sources (Cleveland, Hungary, Switzerland, Long Beach). A key challenge was handling significant missing values across institutions, particularly for features like `ca` and `thal`.
+The dataset was consolidated from four separate CSV sources downloaded directly from the UCI repository. A key challenge was handling significant missing values across institutions, particularly for `ca` (66% missing) and `thal` (53% missing).
 
 ### 2. Exploratory Data Analysis (EDA)
-- Generated a **Correlation Heatmap** to identify data quality issues and feature relationships
-- `oldpeak` (ST depression) and `exang` (exercise-induced angina) were the **strongest positive predictors**
-- `thalach` (maximum heart rate) showed a **strong negative correlation** — higher cardiovascular capacity is a protective indicator
-- Surprisingly, **cholesterol ranked only 8th** (correlation: 0.229), challenging the common belief that it is the primary heart disease indicator
+
+Key findings from correlation analysis:
+
+| Feature | Correlation with Heart Disease | Direction |
+|---|---|---|
+| `cp` (Chest Pain Type) | **0.472** | Positive |
+| `exang` (Exercise Angina) | 0.434 | Positive |
+| `thalach` (Max Heart Rate) | 0.382 | Negative ✦ |
+| `oldpeak` (ST Depression) | 0.366 | Positive |
+| `thal` (Thalassemia) | 0.312 | Positive |
+| `sex` | 0.307 | Positive |
+| `chol` (Cholesterol) | 0.229 | Positive |
+
+> ✦ Higher cardiovascular capacity is a **protective** indicator — patients with higher max heart rates were less likely to have heart disease.
+>
+> **Notable finding:** Cholesterol ranked only 8th despite being the most widely cited heart disease risk factor.
 
 ### 3. Preprocessing & Feature Engineering
 
 | Step | Approach |
 |---|---|
 | **Binary Labeling** | Multi-class target (0–4) simplified to binary: healthy (0) vs. disease (1) |
-| **Categorical Encoding** | One-Hot Encoding for features like `cp` (chest pain type) and `restecg` |
-| **Missing Value Imputation** | Median imputation for low-missingness features; Random Classifier prediction-based imputation for high-missingness features (e.g., `ca`) |
+| **Categorical Encoding** | One-Hot Encoding (`drop_first=True`) for features like `cp` and `restecg` |
+| **Median Imputation** | Applied to low-missingness features (`trestbps`, `chol`, `fbs`, etc.) — resistant to extreme values |
+| **RF-Based Imputation** | Applied to high-missingness features (`ca` 66%, `thal` 53%, `slope`) — predicts missing values using correlations from complete records |
+| **Train/Test Split** | 80/20 stratified split (preserves class ratio in both sets) |
+| **Feature Scaling** | StandardScaler applied for Logistic Regression |
 
 ---
 
-## 📊 Models & Results
+## Results
 
-Three models were evaluated on an **80/20 stratified train-test split**:
+### Single Split Performance (80/20 Test Set)
 
-| Model | Accuracy | Recall | ROC-AUC |
-|---|---|---|---|
-| Logistic Regression | ~84% | — | — |
-| Decision Tree | ~83% | — | — |
-| **Random Forest** | **86%** | **0.81** | **0.91** |
+| Model | Recall (Disease) | ROC-AUC |
+|---|---|---|
+| Logistic Regression | 0.86 | 0.9035 |
+| Decision Tree | 0.83 | 0.8535 |
+| **Random Forest** | **0.88** | **0.9164** |
 
-> **Why Recall?** In a medical context, a False Negative (telling a sick person they are healthy) is far more dangerous than a False Positive. The model correctly identified **81% of all disease cases** in the test set.
+> **Why Recall?** A False Negative (telling a sick patient they are healthy) is far more dangerous than a False Positive. Random Forest correctly identified **88% of all actual heart disease cases**.
 
-<!-- Add your charts here once exported from your notebook -->
-<!-- ![Model Comparison](images/model_comparison.png) -->
-<!-- ![Confusion Matrix](images/confusion_matrix.png) -->
+### Cross-Validation (5-Fold Stratified)
+
+| Model | CV ROC-AUC | Std Dev |
+|---|---|---|
+| Logistic Regression | 0.8785 | ±0.0242 |
+| Decision Tree | 0.7884 | ±0.0365 |
+| **Random Forest** | **0.8814** | ±0.0275 |
+
+> Cross-validation is the more reliable estimate. Random Forest leads (0.8814 vs 0.8785), but the gap is only **0.0029** — a very narrow margin. Logistic Regression is more stable (lower variance) and fully explainable, making it a strong clinical alternative.
+
+<!-- Add your exported charts here -->
+<!-- ![Model Performance Comparison](images/model_comparison.png) -->
+<!-- ![Confusion Matrices](images/confusion_matrix.png) -->
 <!-- ![ROC Curves](images/roc_curves.png) -->
 
 ---
 
-## 💡 Key Findings
+## Key Findings
 
-- **Chest pain type (`cp`)** was the single strongest predictor across both EDA and model-based feature importance — confirming that patient-reported symptoms remain a foundational diagnostic signal
-- **Cholesterol underperformed** expectations, ranking 8th — acute indicators like exercise-induced angina and maximum heart rate provide more immediate discriminatory power
-- **Random Forest vs. Logistic Regression** presented a strategic trade-off: Random Forest offers slightly higher accuracy, but Logistic Regression provides the transparency essential for medical trust
+**1. Chest pain type is the strongest predictor.**
+With a correlation of 0.472, `cp` was the top-ranked feature in both EDA and all three model feature importance rankings — confirming it as the most reliable clinical signal in this dataset.
+
+**2. Cholesterol underperformed expectations.**
+Despite being the most widely cited risk factor, cholesterol ranked 8th (correlation: 0.229). Exercise-induced angina and max heart rate proved far more discriminating.
+
+**3. Random Forest vs. Logistic Regression is essentially a tie.**
+Random Forest leads by only 0.0029 in cross-validated AUC. Logistic Regression is more stable (±0.0242 vs ±0.0275) and fully explainable — an important consideration in clinical settings where doctors need to understand and trust a prediction.
+
+**4. Decision Tree is the weakest model** under both evaluation methods and is not recommended for deployment.
 
 ---
 
-## ⚖️ Ethical Considerations
+## Ethical Considerations
 
 - **Bias & Equity:** The dataset is historically male-heavy. Without caution, the model may be less accurate for female patients, leading to diagnostic inequity
 - **Scope of Use:** This tool is intended as a **decision-support system**, not a replacement for professional medical diagnosis
@@ -91,15 +148,16 @@ Three models were evaluated on an **80/20 stratified train-test split**:
 
 ---
 
-## 🚀 Future Directions
+## Future Directions
 
-- Threshold tuning — lower the decision boundary below 0.5 to further prioritize Recall
-- Explore advanced ensemble models (XGBoost, LightGBM) for more complex pattern recognition
-- Clinical validation with medical professionals before any real-world deployment
+1. **Hyperparameter tuning** — Use GridSearchCV to find optimal settings and verify whether the LR vs RF tie holds after tuning
+2. **Threshold tuning** — Lower the decision threshold below 0.5 to further prioritize Recall and reduce missed diagnoses
+3. **Advanced models** — Test XGBoost or LightGBM for more complex pattern recognition
+4. **Clinical validation** — Work with medical professionals to validate predictions before any real-world deployment
 
 ---
 
-## ⚙️ Setup & Usage
+## Setup & Usage
 
 ```bash
 # Clone the repository
@@ -109,21 +167,21 @@ cd heart-disease-prediction
 # Install dependencies
 pip install -r requirements.txt
 
-# Run the analysis
-python heart_disease_model.py
+# Run the notebook
+jupyter notebook Heart_Disease_Prediction_Analysis.ipynb
 ```
 
 ---
 
-## 📁 Repository Structure
+## Repository Structure
 
 ```
 heart-disease-prediction/
 │
 ├── README.md
-├── heart_disease_model.py     # Main ML pipeline
-├── requirements.txt           # Python dependencies
-└── images/                    # Charts and visualizations
+├── Heart_Disease_Prediction_Analysis.ipynb   # Full analysis notebook
+├── requirements.txt                          # Python dependencies
+└── images/                                   # Exported chart images
     ├── model_comparison.png
     ├── confusion_matrix.png
     └── roc_curves.png
@@ -131,8 +189,8 @@ heart-disease-prediction/
 
 ---
 
-## 📚 References
+## References
 
-- Janosi, A., et al. (1988). *Heart Disease Data Set*. UCI Machine Learning Repository.
-- Kiuchi, A., et al. (2024). *Prediction of heart disease severity*. 17th International Joint Conference on Biomedical Engineering Systems.
+- Janosi, A., Steinbrunn, W., Pfisterer, M., & Detrano, R. (1988). *Heart Disease Data Set*. UCI Machine Learning Repository. https://doi.org/10.24432/C52P4X
+- Kiuchi, A., Fujita, T., & Yamana, H. (2024). *Prediction of heart disease severity using hierarchically-structured machine-learning models*. 17th International Joint Conference on Biomedical Engineering Systems and Technologies. https://doi.org/10.5220/0012436700003657
 - Pedregosa, F., et al. (2011). *Scikit-learn: Machine Learning in Python*. JMLR 12, pp. 2825–2830.
