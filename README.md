@@ -118,10 +118,17 @@ Key findings from correlation analysis:
 
 > Cross-validation is the more reliable estimate. Random Forest leads (0.8814 vs 0.8785), but the gap is only **0.0029** - a very narrow margin. Logistic Regression is more stable (lower variance) and fully explainable, making it a strong clinical alternative.
 
-<!-- Add your exported charts here -->
-<!-- ![Model Performance Comparison](images/model_comparison.png) -->
-<!-- ![Confusion Matrices](images/confusion_matrix.png) -->
-<!-- ![ROC Curves](images/roc_curves.png) -->
+### Model Performance Comparison
+![Model Performance Comparison](model_comparison.png)
+
+### Confusion Matrices
+![Confusion Matrices](confusion_matrix.png)
+
+### ROC Curves
+![ROC Curves](roc_curves.png)
+
+### Random Forest - Top Feature Importances
+![Feature Importance](feature_importance.png)
 
 ---
 
