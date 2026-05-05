@@ -168,8 +168,8 @@ Random Forest leads by only 0.0029 in cross-validated AUC. Logistic Regression i
 
 ```bash
 # Clone the repository
-git clone https://github.com/your-username/heart-disease-prediction.git
-cd heart-disease-prediction
+git clone https://github.com/ReneeRaeSC/Heart-Disease-Prediction-Analysis.git
+cd Heart-Disease-Prediction-Analysis
 
 # Install dependencies
 pip install -r requirements.txt
@@ -187,6 +187,7 @@ heart-disease-prediction/
 │
 ├── README.md
 ├── Heart_Disease_Prediction_Analysis.ipynb   # Full analysis notebook
+├── requirements.txt                          # Python dependencies
 ├── confusion_matrix.png
 ├── feature_importance.png
 ├── model_comparison.png
