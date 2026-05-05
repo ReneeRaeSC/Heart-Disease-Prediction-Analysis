@@ -187,11 +187,10 @@ heart-disease-prediction/
 │
 ├── README.md
 ├── Heart_Disease_Prediction_Analysis.ipynb   # Full analysis notebook
-├── requirements.txt                          # Python dependencies
-└── images/                                   # Exported chart images
-    ├── model_comparison.png
-    ├── confusion_matrix.png
-    └── roc_curves.png
+├── confusion_matrix.png
+├── feature_importance.png
+├── model_comparison.png
+└── roc_curves.png
 ```
 
 ---
