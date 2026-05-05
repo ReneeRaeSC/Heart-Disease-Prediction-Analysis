@@ -1,6 +1,6 @@
 # Heart Disease Prediction Analysis
 
-A machine learning project that applies binary classification to predict the presence of heart disease using the UCI Heart Disease dataset. The project prioritizes **Recall (Sensitivity)** to minimize false negatives — ensuring high-risk patients are flagged for clinical review.
+A machine learning project that applies binary classification to predict the presence of heart disease using the UCI Heart Disease dataset. The project prioritizes **Recall (Sensitivity)** to minimize false negatives, ensuring high-risk patients are flagged for clinical review.
 
 ---
 
@@ -10,10 +10,10 @@ Cardiovascular disease is one of the leading causes of death globally. This proj
 
 | | |
 |---|---|
-| **Goal** | Binary classification — predict whether a patient has heart disease (1) or not (0) |
-| **Dataset** | UCI Heart Disease Repository — 920 patient records from 4 institutions |
+| **Goal** | Binary classification - predict whether a patient has heart disease (1) or not (0) |
+| **Dataset** | UCI Heart Disease Repository - 920 patient records from Cleveland, Hungary, Switzerland, and Long Beach |
 | **Models** | Logistic Regression, Decision Tree, Random Forest |
-| **Primary Metric** | Recall (Sensitivity) — minimizing dangerous false negatives |
+| **Primary Metric** | Recall (Sensitivity) - minimizing dangerous false negatives |
 
 ---
 
@@ -79,7 +79,7 @@ Key findings from correlation analysis:
 | `sex` | 0.307 | Positive |
 | `chol` (Cholesterol) | 0.229 | Positive |
 
-> ✦ Higher cardiovascular capacity is a **protective** indicator — patients with higher max heart rates were less likely to have heart disease.
+> ✦ Higher cardiovascular capacity is a **protective** indicator - patients with higher max heart rates were less likely to have heart disease.
 >
 > **Notable finding:** Cholesterol ranked only 8th despite being the most widely cited heart disease risk factor.
 
@@ -89,8 +89,8 @@ Key findings from correlation analysis:
 |---|---|
 | **Binary Labeling** | Multi-class target (0–4) simplified to binary: healthy (0) vs. disease (1) |
 | **Categorical Encoding** | One-Hot Encoding (`drop_first=True`) for features like `cp` and `restecg` |
-| **Median Imputation** | Applied to low-missingness features (`trestbps`, `chol`, `fbs`, etc.) — resistant to extreme values |
-| **RF-Based Imputation** | Applied to high-missingness features (`ca` 66%, `thal` 53%, `slope`) — predicts missing values using correlations from complete records |
+| **Median Imputation** | Applied to low-missingness features (`trestbps`, `chol`, `fbs`, etc.) - resistant to extreme values |
+| **RF-Based Imputation** | Applied to high-missingness features (`ca` 66%, `thal` 53%, `slope`) - predicts missing values using correlations from complete records |
 | **Train/Test Split** | 80/20 stratified split (preserves class ratio in both sets) |
 | **Feature Scaling** | StandardScaler applied for Logistic Regression |
 
@@ -116,7 +116,7 @@ Key findings from correlation analysis:
 | Decision Tree | 0.7884 | ±0.0365 |
 | **Random Forest** | **0.8814** | ±0.0275 |
 
-> Cross-validation is the more reliable estimate. Random Forest leads (0.8814 vs 0.8785), but the gap is only **0.0029** — a very narrow margin. Logistic Regression is more stable (lower variance) and fully explainable, making it a strong clinical alternative.
+> Cross-validation is the more reliable estimate. Random Forest leads (0.8814 vs 0.8785), but the gap is only **0.0029** - a very narrow margin. Logistic Regression is more stable (lower variance) and fully explainable, making it a strong clinical alternative.
 
 <!-- Add your exported charts here -->
 <!-- ![Model Performance Comparison](images/model_comparison.png) -->
@@ -128,13 +128,13 @@ Key findings from correlation analysis:
 ## Key Findings
 
 **1. Chest pain type is the strongest predictor.**
-With a correlation of 0.472, `cp` was the top-ranked feature in both EDA and all three model feature importance rankings — confirming it as the most reliable clinical signal in this dataset.
+With a correlation of 0.472, `cp` was the top-ranked feature in both EDA and all three model feature importance rankings - confirming it as the most reliable clinical signal in this dataset.
 
 **2. Cholesterol underperformed expectations.**
 Despite being the most widely cited risk factor, cholesterol ranked 8th (correlation: 0.229). Exercise-induced angina and max heart rate proved far more discriminating.
 
 **3. Random Forest vs. Logistic Regression is essentially a tie.**
-Random Forest leads by only 0.0029 in cross-validated AUC. Logistic Regression is more stable (±0.0242 vs ±0.0275) and fully explainable — an important consideration in clinical settings where doctors need to understand and trust a prediction.
+Random Forest leads by only 0.0029 in cross-validated AUC. Logistic Regression is more stable (±0.0242 vs ±0.0275) and fully explainable which is an important consideration in clinical settings where doctors need to understand and trust a prediction.
 
 **4. Decision Tree is the weakest model** under both evaluation methods and is not recommended for deployment.
 
@@ -150,10 +150,10 @@ Random Forest leads by only 0.0029 in cross-validated AUC. Logistic Regression i
 
 ## Future Directions
 
-1. **Hyperparameter tuning** — Use GridSearchCV to find optimal settings and verify whether the LR vs RF tie holds after tuning
-2. **Threshold tuning** — Lower the decision threshold below 0.5 to further prioritize Recall and reduce missed diagnoses
-3. **Advanced models** — Test XGBoost or LightGBM for more complex pattern recognition
-4. **Clinical validation** — Work with medical professionals to validate predictions before any real-world deployment
+1. **Hyperparameter tuning** - Use GridSearchCV to find optimal settings and verify whether the LR vs RF tie holds after tuning
+2. **Threshold tuning** - Lower the decision threshold below 0.5 to further prioritize Recall and reduce missed diagnoses
+3. **Advanced models** - Test XGBoost or LightGBM for more complex pattern recognition
+4. **Clinical validation** - Work with medical professionals to validate predictions before any real-world deployment
 
 ---
 
@@ -193,4 +193,3 @@ heart-disease-prediction/
 
 - Janosi, A., Steinbrunn, W., Pfisterer, M., & Detrano, R. (1988). *Heart Disease Data Set*. UCI Machine Learning Repository. https://doi.org/10.24432/C52P4X
 - Kiuchi, A., Fujita, T., & Yamana, H. (2024). *Prediction of heart disease severity using hierarchically-structured machine-learning models*. 17th International Joint Conference on Biomedical Engineering Systems and Technologies. https://doi.org/10.5220/0012436700003657
-- Pedregosa, F., et al. (2011). *Scikit-learn: Machine Learning in Python*. JMLR 12, pp. 2825–2830.
